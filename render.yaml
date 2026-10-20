@@ -1,0 +1,27 @@
+databases:
+  - name: yoplait-db
+    databaseName: yoplait
+    user: yoplait
+    plan: free
+
+services:
+  - type: web
+    name: yoplait-disponibilites
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: yoplait-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JOIN_CODE
+        sync: false
+      - key: ADMIN_RECOVERY_KEY
+        sync: false
